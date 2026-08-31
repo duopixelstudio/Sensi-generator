@@ -1,0 +1,23 @@
+{
+  "short_name": "AI Sensi",
+  "name": "AI SENSI GENERATOR — Duo Pixel",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192x192/080B10/00F3FF?text=SENSI",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://via.placeholder.com/512x512/080B10/00F3FF?text=SENSI",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#080B10",
+  "theme_color": "#080B10",
+  "default_locale": "en",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait"
+}
