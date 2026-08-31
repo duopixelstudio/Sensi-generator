@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#080B10">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Duo Pixel — AI SENSI GENERATOR</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            --bg-dark: #080B10;
+            --card-bg: #101522;
+            --card-border: rgba(0, 243, 255, 0.15);
+            --accent-cyan: #00F3FF;
+            --accent-green: #00FF88;
+            --accent-orange: #FF9900;
+            --text-main: #FFFFFF;
+            --text-muted: #8E9BB0;
+            --radius-main: 16px;
+            --radius-sub: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 480px;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .brand-name {
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            color: var(--accent-cyan);
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .app-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            margin: 4px 0;
+            background: linear-gradient(180deg, #FFFFFF 0%, #A5C0DD 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .app-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-main);
+            padding: 18px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-title {
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
+            color: var(--accent-cyan);
+            font-weight: 700;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-sub);
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: var(--accent-cyan);
+        }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
+            gap: 8px;
+        }
+
+        .option-btn {
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-sub);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .option-btn.active {
+            background: var(--accent-cyan);
+            color: var(--bg-dark);
+            border-color: var(--accent-cyan);
+            font-weight: 800;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: var(--accent-cyan);
+            color: var(--bg-dark);
+            border: none;
+            border-radius: var(--radius-sub);
+            font-size: 1rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+            transition: transform 0.1s, filter 0.2s;
+            margin-top: 6px;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-copy {
+            background: var(--accent-green);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-sub);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .meta-title {
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        .badge {
+            font-size: 0.65rem;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .badge-estimated {
+            background: rgba(255, 153, 0, 0.15);
+            color: var(--accent-orange);
+            border: 1px solid var(--accent-orange);
+        }
+
+        .sensi-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 14px 0;
+        }
+
+        .sensi-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-sub);
+            padding: 10px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sensi-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .sensi-value {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--accent-cyan);
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            color: var(--text-muted);
+        }
+
+        .metric-val {
+            font-weight: 700;
+        }
+
+        .feedback-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .feedback-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-sub);
+            padding: 8px 16px;
+            color: var(--text-main);
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .saved-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--card-border);
+            padding: 10px;
+            border-radius: var(--radius-sub);
+            margin-bottom: 8px;
+        }
+
+        .ad-placeholder {
+            border: 1px dashed var(--card-border);
+            padding: 12px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            border-radius: var(--radius-sub);
+        }
+
+        .disclaimer {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-align: center;
+            line-height: 1.4;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+
+    <div class="brand-header">
+        <div class="brand-name">DUO PIXEL</div>
+        <div class="app-title">AI SENSI GENERATOR</div>
+        <div class="app-subtitle">Device-aware sensitivity optimization</div>
+    </div>
+
+    <!-- INPUT CARD -->
+    <div id="input-card" class="card">
+        <div class="card-title">Quick Setup</div>
+        
+        <div class="form-group">
+            <label for="device-input">Device Model</label>
+            <input type="text" id="device-input" placeholder="e.g. Poco X3, Galaxy S21, iPhone 13">
+        </div>
+
+        <div class="form-group">
+            <label>RAM Configuration</label>
+            <div class="btn-grid" id="ram-selector">
+                <div class="option-btn" data-val="3">3 GB</div>
+                <div class="option-btn" data-val="4">4 GB</div>
+                <div class="option-btn" data-val="6">6 GB</div>
+                <div class="option-btn active" data-val="8">8 GB</div>
+                <div class="option-btn" data-val="12">12+ GB</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Finger Setup</label>
+            <div class="btn-grid" id="finger-selector">
+                <div class="option-btn" data-val="2">2 Finger</div>
+                <div class="option-btn active" data-val="3">3 Finger</div>
+                <div class="option-btn" data-val="4">4 Finger</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Game Version</label>
+            <div class="btn-grid" id="game-selector">
+                <div class="option-btn active" data-val="FF">Free Fire</div>
+                <div class="option-btn" data-val="MAX">FF MAX</div>
+            </div>
+        </div>
+
+        <button class="btn-primary" id="btn-generate">⚡ Generate Sensi</button>
+    </div>
+
+    <!-- RESULT CARD -->
+    <div id="result-card" class="card hidden">
+        <div class="meta-row">
+            <div class="meta-title" id="res-device">Device Name</div>
+            <div class="badge badge-estimated" id="res-confidence">ESTIMATED</div>
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);" id="res-sub">Tier | Version</div>
+
+        <div class="sensi-grid">
+            <div class="sensi-box"><span class="sensi-label">General</span><span class="sensi-value" id="val-gen">0</span></div>
+            <div class="sensi-box"><span class="sensi-label">Red Dot</span><span class="sensi-value" id="val-red">0</span></div>
+            <div class="sensi-box"><span class="sensi-label">2× Scope</span><span class="sensi-value" id="val-2x">0</span></div>
+            <div class="sensi-box"><span class="sensi-label">4× Scope</span><span class="sensi-value" id="val-4x">0</span></div>
+            <div class="sensi-box"><span class="sensi-label">Sniper</span><span class="sensi-value" id="val-sniper">0</span></div>
+            <div class="sensi-box"><span class="sensi-label">Free Look</span><span class="sensi-value" id="val-free">0</span></div>
+        </div>
+
+        <div style="margin-top: 10px;">
+            <div class="metric-row"><span class="metric-label">Headshot Potential</span><span class="metric-val" id="met-hs">0%</span></div>
+            <div class="metric-row"><span class="metric-label">Drag Control Score</span><span class="metric-val" id="met-drag">0%</span></div>
+            <div class="metric-row"><span class="metric-label">Scope Stability</span><span class="metric-val" id="met-stab">0%</span></div>
+        </div>
+
+        <div style="margin-top: 14px;">
+            <button class="btn-primary btn-copy" id="btn-copy">📋 Copy Sensi</button>
+            <button class="btn-secondary" id="btn-again">🔄 Generate Again</button>
+            <button class="btn-secondary" id="btn-save">💾 Save Profile</button>
+        </div>
+
+        <div style="margin-top: 14px;">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-align: center;">How did this sensitivity feel?</div>
+            <div class="feedback-container">
+                <button class="feedback-btn" onclick="submitFeedback('better')">👍 Better</button>
+                <button class="feedback-btn" onclick="submitFeedback('same')">😐 Same</button>
+                <button class="feedback-btn" onclick="submitFeedback('worse')">👎 Worse</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SAVED PROFILES CARD -->
+    <div class="card">
+        <div class="card-title">Saved Profiles</div>
+        <div id="saved-list">
+            <div style="font-size: 0.75rem; color: var(--text-muted);">No saved profiles yet.</div>
+        </div>
+    </div>
+
+    <!-- PREMIUM & MONETIZATION PLACEHOLDER -->
+    <div class="card" style="border-color: rgba(255, 215, 0, 0.3);">
+        <div class="card-title" style="color: #FFD700;">Duo Pixel Premium</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;">
+            Unlock advanced calibration, historical profile matching, and ad-free experience.
+        </div>
+        <button class="btn-secondary" style="border-color: #FFD700; color: #FFD700;" onclick="alert('Payment Integration Placeholder: Connect backend provider here.')">Upgrade to Premium</button>
+    </div>
+
+    <!-- AD CONTAINER PLACEHOLDER -->
+    <div class="ad-placeholder">
+        <!-- Google AdSense / AdMob Web Ad Container Placeholder -->
+        ADVERTISEMENT SPACE
+    </div>
+
+    <div class="disclaimer">
+        AI Sensi Generator is an independent sensitivity tool and is not affiliated with or endorsed by Garena. Free Fire and Free Fire MAX are trademarks of their respective owners.
+    </div>
+
+</div>
+
+<script>
+    // ==========================================
+    // BACKEND CONFIGURATION PLACEHOLDER
+    // ==========================================
+    const API_BASE_URL = ""; // Optional backend API URL. If empty, local engine is used.
+
+    // State Variables
+    let selectedRam = 8;
+    let selectedFingers = 3;
+    let selectedGame = "FF";
+    let currentProfile = null;
+    let generationSeedOffset = 0;
+
+    // UI Click Handlers for Segmented Control
+    function setupSegmentControls(containerId, callback) {
+        const container = document.getElementById(containerId);
+        container.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                container.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                callback(btn.getAttribute('data-val'));
+            });
+        });
+    }
+
+    setupSegmentControls('ram-selector', val => selectedRam = parseInt(val));
+    setupSegmentControls('finger-selector', val => selectedFingers = parseInt(val));
+    setupSegmentControls('game-selector', val => selectedGame = val);
+
+    // Engine Implementation
+    function classifyDevice(modelStr) {
+        const model = modelStr.toLowerCase().trim();
+        let tier = "Standard Balanced Tier";
+        let isHighEnd = false;
+        let isBudget = false;
+
+        if (model.includes("rog") || model.includes("ultra") || model.includes("iphone 13") || model.includes("iphone 14") || model.includes("iphone 15")) {
+            tier = "High Response / Low Latency";
+            isHighEnd = true;
+        } else if (selectedRam <= 4) {
+            tier = "Budget Hardware Latency Compensation";
+            isBudget = true;
+        }
+
+        return { tier, isHighEnd, isBudget };
+    }
+
+    function generateSensitivityEngine(deviceModel, ram, fingers, game, offset = 0) {
+        const devInfo = classifyDevice(deviceModel);
+        let hash = 0;
+        const str = deviceModel + offset;
+        for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        const seed = Math.abs(hash) % 100;
+
+        let baseGen = 182 + (seed % 10);
+        if (devInfo.isBudget) baseGen += 6;
+        if (devInfo.isHighEnd) baseGen -= 4;
+
+        if (fingers === 2) baseGen += 3;
+        if (fingers === 4) baseGen -= 5;
+        if (game === "MAX") baseGen += 2;
+
+        const clamp = v => Math.min(200, Math.max(50, Math.round(v)));
+
+        const gen = clamp(baseGen);
+        const red = clamp(gen - 8 - (seed % 3));
+        const s2x = clamp(gen - 20 - (seed % 4));
+        const s4x = clamp(gen - 35 - (seed % 5));
+        const sniper = clamp(90 + (seed % 15));
+        const free = clamp(gen - 40 + (seed % 8));
+
+        const hsMin = 81 + (seed % 5);
+
+        return {
+            device: deviceModel.trim() || "Generic Device",
+            game: game === "FF" ? "Free Fire" : "Free Fire MAX",
+            ram: ram + " GB",
+            fingers: fingers + " Finger",
+            tier: devInfo.tier,
+            confidence: "ESTIMATED",
+            version: "v2.0-local-web",
+            general: gen,
+            redDot: red,
+            scope2x: s2x,
+            scope4x: s4x,
+            sniperScope: sniper,
+            freeLook: free,
+            estimates: {
+                headshot: `${hsMin}–${hsMin + 5}%`,
+                drag: Math.min(95, 85 + Math.floor(ram / 2)) + "%",
+                stability: (85 + (seed % 6)) + "%"
+            }
+        };
+    }
+
+    // UI Trigger logic
+    document.getElementById('btn-generate').addEventListener('click', () => {
+        generationSeedOffset = 0;
+        runGeneration();
+    });
+
+    document.getElementById('btn-again').addEventListener('click', () => {
+        generationSeedOffset += 17;
+        runGeneration();
+    });
+
+    function runGeneration() {
+        const deviceStr = document.getElementById('device-input').value;
+        currentProfile = generateSensitivityEngine(deviceStr, selectedRam, selectedFingers, selectedGame, generationSeedOffset);
+        
+        document.getElementById('res-device').innerText = currentProfile.device;
+        document.getElementById('res-sub').innerText = `Tier: ${currentProfile.tier} | Model: ${currentProfile.version}`;
+        
+        document.getElementById('val-gen').innerText = currentProfile.general;
+        document.getElementById('val-red').innerText = currentProfile.redDot;
+        document.getElementById('val-2x').innerText = currentProfile.scope2x;
+        document.getElementById('val-4x').innerText = currentProfile.scope4x;
+        document.getElementById('val-sniper').innerText = currentProfile.sniperScope;
+        document.getElementById('val-free').innerText = currentProfile.freeLook;
+
+        document.getElementById('met-hs').innerText = currentProfile.estimates.headshot;
+        document.getElementById('met-drag').innerText = currentProfile.estimates.drag;
+        document.getElementById('met-stab').innerText = currentProfile.estimates.stability;
+
+        document.getElementById('result-card').classList.remove('hidden');
+        document.getElementById('result-card').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Clipboard Functionality
+    document.getElementById('btn-copy').addEventListener('click', () => {
+        if (!currentProfile) return;
+        const text = `AI SENSI — ${currentProfile.device}\nGame: ${currentProfile.game}\nRAM: ${currentProfile.ram} | Setup: ${currentProfile.fingers}\nModel: ${currentProfile.version} (${currentProfile.confidence})\n\nGeneral: ${currentProfile.general}\nRed Dot: ${currentProfile.redDot}\n2x Scope: ${currentProfile.scope2x}\n4x Scope: ${currentProfile.scope4x}\nSniper Scope: ${currentProfile.sniperScope}\nFree Look: ${currentProfile.freeLook}`;
+        
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.getElementById('btn-copy');
+            btn.innerText = "✓ SENSI COPIED";
+            setTimeout(() => btn.innerText = "📋 Copy Sensi", 2000);
+        });
+    });
+
+    // Local Storage Saved Profiles
+    document.getElementById('btn-save').addEventListener('click', () => {
+        if (!currentProfile) return;
+        let saved = JSON.parse(localStorage.getItem('sensi_saved') || "[]");
+        saved.push(currentProfile);
+        localStorage.setItem('sensi_saved', JSON.stringify(saved));
+        renderSavedProfiles();
+        alert("Profile saved locally!");
+    });
+
+    function renderSavedProfiles() {
+        const saved = JSON.parse(localStorage.getItem('sensi_saved') || "[]");
+        const container = document.getElementById('saved-list');
+        if (saved.length === 0) {
+            container.innerHTML = `<div style="font-size: 0.75rem; color: var(--text-muted);">No saved profiles yet.</div>`;
+            return;
+        }
+        container.innerHTML = saved.map((p, index) => `
+            <div class="saved-item">
+                <div>
+                    <div style="font-size: 0.85rem; font-weight: bold;">${p.device} (${p.game})</div>
+                    <div style="font-size: 0.7rem; color: var(--text-muted);">Gen: ${p.general} | Red: ${p.redDot} | 2x: ${p.scope2x}</div>
+                </div>
+                <button style="background:none; border:none; color: #FF4444; cursor:pointer;" onclick="deleteProfile(${index})">🗑️</button>
+            </div>
+        `).join('');
+    }
+
+    window.deleteProfile = function(index) {
+        let saved = JSON.parse(localStorage.getItem('sensi_saved') || "[]");
+        saved.splice(index, 1);
+        localStorage.setItem('sensi_saved', JSON.stringify(saved));
+        renderSavedProfiles();
+    };
+
+    window.submitFeedback = function(type) {
+        alert("Thank you for your feedback!");
+    };
+
+    renderSavedProfiles();
+
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+</script>
+
+</body>
+</html>
